@@ -1,0 +1,190 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+local WorkspaceCom = workspace:WaitForChild("WorkspaceCom")
+local giveTools = WorkspaceCom:WaitForChild("001_GiveTools")
+local basketball = giveTools:WaitForChild("Basketball")
+
+-- Salvar posição inicial
+local originalCFrame = hrp.CFrame
+
+-- Criar ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BasketballCollectorUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Frame principal
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 300, 0, 150)
+mainFrame.Position = UDim2.new(0.5, -150, 0.3, -75)
+mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+mainFrame.BorderSizePixel = 0
+mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
+mainFrame.Parent = screenGui
+
+-- Permitir mover no mobile
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+mainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+mainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Título moderno
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundColor3 = Color3.fromRGB(30,30,30)
+title.BorderSizePixel = 0
+title.Text = "Basketball Collector"
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.Parent = mainFrame
+
+-- Frame para scroll
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, -20, 1, -50)
+scrollFrame.Position = UDim2.new(0, 10, 0, 40)
+scrollFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+scrollFrame.BorderSizePixel = 0
+scrollFrame.CanvasSize = UDim2.new(0,0,0,0)
+scrollFrame.ScrollBarThickness = 6
+scrollFrame.Parent = mainFrame
+
+-- UIGridLayout para organizar elementos
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0,10)
+layout.FillDirection = Enum.FillDirection.Horizontal
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Top
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = scrollFrame
+
+-- Criar linha "quantidade = Basketball"
+local lineFrame = Instance.new("Frame")
+lineFrame.Size = UDim2.new(1,0,0,50)
+lineFrame.BackgroundTransparency = 1
+lineFrame.Parent = scrollFrame
+
+-- Label "quantidade ="
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(0, 120, 1, 0)
+label.Position = UDim2.new(0, 0, 0, 0)
+label.BackgroundTransparency = 1
+label.Text = "quantidade ="
+label.TextColor3 = Color3.fromRGB(255,255,255)
+label.Font = Enum.Font.Gotham
+label.TextSize = 16
+label.TextXAlignment = Enum.TextXAlignment.Left
+label.Parent = lineFrame
+
+-- TextBox para quantidade
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 80, 0, 30)
+textBox.Position = UDim2.new(0, 120, 0.5, -15)
+textBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
+textBox.BorderSizePixel = 0
+textBox.PlaceholderText = "0"
+textBox.TextColor3 = Color3.fromRGB(255,255,255)
+textBox.Text = ""
+textBox.ClearTextOnFocus = false
+textBox.Parent = lineFrame
+
+-- Botão "Basketball"
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 80, 0, 30)
+button.Position = UDim2.new(0, 210, 0.5, -15)
+button.BackgroundColor3 = Color3.fromRGB(255,255,255)
+button.TextColor3 = Color3.fromRGB(0,0,0)
+button.Text = "Basketball"
+button.Font = Enum.Font.GothamBold
+button.TextSize = 14
+button.BorderSizePixel = 0
+button.Parent = lineFrame
+
+-- Atualizar CanvasSize
+layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scrollFrame.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
+end)
+
+-- Função para contar ferramentas
+local function getToolCount()
+    local count = #player.Backpack:GetChildren()
+    for _, v in ipairs(char:GetChildren()) do
+        if v:IsA("Tool") then
+            count += 1
+        end
+    end
+    return count
+end
+
+-- Função para pegar Basketballs
+local function collectBasketballs(amount)
+    local originalPos = hrp.CFrame
+    hrp.CFrame = basketball.CFrame + Vector3.new(0,5,0)
+
+    local clickDetector = basketball:FindFirstChildOfClass("ClickDetector")
+    local prompt = basketball:FindFirstChildOfClass("ProximityPrompt")
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            if getToolCount() >= amount then
+                hrp.CFrame = originalPos
+                warn("Pegou "..amount.." Basketballs!")
+                break
+            end
+
+            if clickDetector then
+                fireclickdetector(clickDetector)
+            elseif prompt then
+                fireproximityprompt(prompt)
+            else
+                firetouchinterest(hrp, basketball, 0)
+                task.wait()
+                firetouchinterest(hrp, basketball, 1)
+            end
+        end
+    end)
+end
+
+-- Conectar botão
+button.MouseButton1Click:Connect(function()
+    local amount = tonumber(textBox.Text)
+    if amount and amount > 0 then
+        collectBasketballs(amount)
+    else
+        warn("Insira um número válido!")
+    end
+end)
