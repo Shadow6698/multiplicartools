@@ -9,7 +9,8 @@ local giveTools = WorkspaceCom:WaitForChild("001_GiveTools")
 local basketball = giveTools:FindFirstChild("Basketball")
 local box = giveTools:FindFirstChild("Box")
 local soccerBall = giveTools:FindFirstChild("SoccerBall")
-local signBlack = giveTools:FindFirstChild("SignBlack") -- NOVO
+local signBlack = giveTools:FindFirstChild("SignBlack")
+local fireX = giveTools:FindFirstChild("FireX") -- NOVO
 
 -- Função para contar ferramentas
 local function getToolCount()
@@ -59,8 +60,8 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 220, 0, 200)
-mainFrame.Position = UDim2.new(0.5, -110, 0.3, -100)
+mainFrame.Size = UDim2.new(0, 220, 0, 220) -- aumentei um pouco para o FireX
+mainFrame.Position = UDim2.new(0.5, -110, 0.5, -110)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
 mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
@@ -196,7 +197,8 @@ end
 createLine("Basketball", basketball)
 createLine("Box", box)
 createLine("SoccerBall", soccerBall)
-createLine("SignBlack", signBlack) -- NOVO
+createLine("SignBlack", signBlack)
+createLine("FireX", fireX) -- NOVO
 
 -- Ajustar CanvasSize do scroll
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
