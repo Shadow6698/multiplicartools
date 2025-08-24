@@ -9,6 +9,7 @@ local giveTools = WorkspaceCom:WaitForChild("001_GiveTools")
 local basketball = giveTools:FindFirstChild("Basketball")
 local box = giveTools:FindFirstChild("Box")
 local soccerBall = giveTools:FindFirstChild("SoccerBall")
+local signBlack = giveTools:FindFirstChild("SignBlack") -- NOVO
 
 -- Função para contar ferramentas
 local function getToolCount()
@@ -58,8 +59,8 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 220, 0, 180)
-mainFrame.Position = UDim2.new(0.5, -110, 0.3, -90)
+mainFrame.Size = UDim2.new(0, 220, 0, 200)
+mainFrame.Position = UDim2.new(0.5, -110, 0.3, -100)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
 mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
@@ -117,7 +118,6 @@ closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 14
 closeButton.BorderSizePixel = 0
 closeButton.Parent = mainFrame
-
 closeButton.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
@@ -196,6 +196,7 @@ end
 createLine("Basketball", basketball)
 createLine("Box", box)
 createLine("SoccerBall", soccerBall)
+createLine("SignBlack", signBlack) -- NOVO
 
 -- Ajustar CanvasSize do scroll
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
