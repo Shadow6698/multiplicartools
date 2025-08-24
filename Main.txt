@@ -5,8 +5,10 @@ local hrp = char:WaitForChild("HumanoidRootPart")
 
 local WorkspaceCom = workspace:WaitForChild("WorkspaceCom")
 local giveTools = WorkspaceCom:WaitForChild("001_GiveTools")
+
 local basketball = giveTools:FindFirstChild("Basketball")
 local box = giveTools:FindFirstChild("Box")
+local soccerBall = giveTools:FindFirstChild("SoccerBall")
 
 -- Função para contar ferramentas
 local function getToolCount()
@@ -51,13 +53,13 @@ end
 
 -- GUI
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "Duplicador Hub"
+screenGui.Name = "CollectorUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 300, 0, 180)
-mainFrame.Position = UDim2.new(0.5, -150, 0.3, -90)
+mainFrame.Size = UDim2.new(0, 300, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -150, 0.3, -110)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
 mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
@@ -148,6 +150,7 @@ local function createLine(name, item)
     textBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
     textBox.BorderSizePixel = 0
     textBox.PlaceholderText = "0"
+    textBox.Text = ""
     textBox.TextColor3 = Color3.fromRGB(255,255,255)
     textBox.ClearTextOnFocus = false
     textBox.Parent = lineFrame
@@ -176,6 +179,7 @@ end
 -- Criar linhas
 createLine("Basketball", basketball)
 createLine("Box", box)
+createLine("SoccerBall", soccerBall)
 
 -- Ajustar CanvasSize
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
