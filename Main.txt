@@ -58,8 +58,8 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 300, 0, 220)
-mainFrame.Position = UDim2.new(0.5, -150, 0.3, -110)
+mainFrame.Size = UDim2.new(0, 220, 0, 180)
+mainFrame.Position = UDim2.new(0.5, -110, 0.3, -90)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
 mainFrame.AnchorPoint = Vector2.new(0.5,0.5)
@@ -96,20 +96,36 @@ end)
 
 -- Título
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1,0,0,30)
+title.Size = UDim2.new(1,0,0,25)
 title.Position = UDim2.new(0,0,0,0)
 title.BackgroundColor3 = Color3.fromRGB(30,30,30)
 title.BorderSizePixel = 0
-title.Text = "Duplicador Hub"
+title.Text = "Collector Hub"
 title.TextColor3 = Color3.fromRGB(255,255,255)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 18
+title.TextSize = 16
 title.Parent = mainFrame
+
+-- Botão X para fechar
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0,25,0,25)
+closeButton.Position = UDim2.new(1,-25,0,0)
+closeButton.BackgroundColor3 = Color3.fromRGB(200,0,0)
+closeButton.TextColor3 = Color3.fromRGB(255,255,255)
+closeButton.Text = "X"
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 14
+closeButton.BorderSizePixel = 0
+closeButton.Parent = mainFrame
+
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
 
 -- Scroll Frame
 local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, -20, 1, -50)
-scrollFrame.Position = UDim2.new(0, 10, 0, 40)
+scrollFrame.Size = UDim2.new(1, -10, 1, -35)
+scrollFrame.Position = UDim2.new(0, 5, 0, 30)
 scrollFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
 scrollFrame.BorderSizePixel = 0
 scrollFrame.CanvasSize = UDim2.new(0,0,0,0)
@@ -118,35 +134,35 @@ scrollFrame.Parent = mainFrame
 
 -- Layout vertical
 local layout = Instance.new("UIListLayout")
-layout.Padding = UDim.new(0,10)
+layout.Padding = UDim.new(0,6)
 layout.FillDirection = Enum.FillDirection.Vertical
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 layout.VerticalAlignment = Enum.VerticalAlignment.Top
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 layout.Parent = scrollFrame
 
--- Função para criar linha
+-- Função para criar linha de item
 local function createLine(name, item)
     if not item then return end
     local lineFrame = Instance.new("Frame")
-    lineFrame.Size = UDim2.new(1,0,0,50)
+    lineFrame.Size = UDim2.new(1,0,0,40)
     lineFrame.BackgroundTransparency = 1
     lineFrame.Parent = scrollFrame
 
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0,120,1,0)
+    label.Size = UDim2.new(0,100,1,0)
     label.Position = UDim2.new(0,0,0,0)
     label.BackgroundTransparency = 1
     label.Text = name.." ="
     label.TextColor3 = Color3.fromRGB(255,255,255)
     label.Font = Enum.Font.Gotham
-    label.TextSize = 16
+    label.TextSize = 14
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = lineFrame
 
     local textBox = Instance.new("TextBox")
-    textBox.Size = UDim2.new(0,80,0,30)
-    textBox.Position = UDim2.new(0,120,0.5,-15)
+    textBox.Size = UDim2.new(0,60,0,25)
+    textBox.Position = UDim2.new(0,100,0.5,-12)
     textBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
     textBox.BorderSizePixel = 0
     textBox.PlaceholderText = "0"
@@ -156,13 +172,13 @@ local function createLine(name, item)
     textBox.Parent = lineFrame
 
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0,80,0,30)
-    button.Position = UDim2.new(0,210,0.5,-15)
+    button.Size = UDim2.new(0,60,0,25)
+    button.Position = UDim2.new(0,165,0.5,-12)
     button.BackgroundColor3 = Color3.fromRGB(255,255,255)
     button.TextColor3 = Color3.fromRGB(0,0,0)
     button.Text = name
     button.Font = Enum.Font.GothamBold
-    button.TextSize = 14
+    button.TextSize = 12
     button.BorderSizePixel = 0
     button.Parent = lineFrame
 
@@ -176,12 +192,12 @@ local function createLine(name, item)
     end)
 end
 
--- Criar linhas
+-- Criar linhas para todos os itens
 createLine("Basketball", basketball)
 createLine("Box", box)
 createLine("SoccerBall", soccerBall)
 
--- Ajustar CanvasSize
+-- Ajustar CanvasSize do scroll
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scrollFrame.CanvasSize = UDim2.new(0,0,0,layout.AbsoluteContentSize.Y)
 end)
