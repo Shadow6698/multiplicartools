@@ -194,11 +194,13 @@ local function createLine(name, item)
 end
 
 -- Criar linhas para todos os itens
-createLine("Basketball", basketball)
-createLine("Box", box)
-createLine("SoccerBall", soccerBall)
-createLine("SignBlack", signBlack)
-createLine("FireX", fireX) -- NOVO
+createLine("Basquete", basketball)
+createLine("Caixa", box)
+createLine("Bola de Futebol", soccerBall)
+createLine("Placa Preta", signBlack)
+createLine("FireX", fireX)
+createLine("Livro", book)
+createLine("Rosas", roses)
 
 -- Ajustar CanvasSize do scroll
 layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
